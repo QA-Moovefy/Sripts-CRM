@@ -1,0 +1,56 @@
+/// <reference types="cypress" />
+
+describe('Criar cliente CRM', ()=>{
+    before(()=>{
+        
+        cy.visit('https://gvmmaquinasdev.azurewebsites.net/Account/Login?ReturnUrl=%2F') //acessando site 
+    
+
+        cy.get('#usuario').type('Gama')
+        cy.get('#senha').type('Gama@2022')
+        cy.get('[aria-label=ACESSAR]').click()
+        cy.get('#filial').select('VAMOS LOCAÇÃO')
+        cy.get('[aria-label=ACESSAR]').click()
+        cy.get('[aria-label=Fechar]').click()
+        
+    })
+
+    it('Criando', ()=>{
+
+        //acessando tela clientes e cadastro
+
+         cy.get('.sidebar-toggle-gama').click()
+         cy.get('.sidebar-gama-menu > :nth-child(2) > [href="#"]')
+            .click().get('.active > .treeview-menu > :nth-child(1) > a').click()
+         cy.get('[title=Incluir]').click()
+
+        //incluindo cliente
+
+         cy.get('#TipoClie')
+            .type('{enter}').wait(2000).type('{downArrow}').type('{enter}')
+         cy.get('#radioTipoPessoa > .dx-widget > :nth-child(1) > .dx-radio-value-container > .dx-radiobutton-icon').click() 
+         cy.get('#txtBoxCPFouCNPJ').type('35265402098') //cpf ou cnpj do cliente de acordo com o escolhido 
+         cy.xpath("(//div[@aria-label='Incluir'])[2]").click({force:true})
+
+        //cadastro informações cliente 
+
+         cy.xpath("//input[@name='Cliente.EntidadeExterna.Nome']").type('Cliente Cypress') //nome cliente 
+         cy.get('#edtOrigem')
+            .type('SITE').wait(2000).type('{downArrow}').focused().tab()
+         cy.get('.dx-datagrid-toolbar-button > .dx-button-content').click()
+         cy.xpath("(//input[@type='text'])[33]").type('Contato Cypress_2 ') //nome contato 
+         cy.xpath("(//input[@type='text'])[35]")
+            .type('22').tab().type('1234567891').tab().tab().type('teste@a.com').wait(2000)
+         cy.get("[aria-label='Salvar Contato']").click({force:true})
+         cy.xpath("//textarea[@name='Cliente.Observacao']").type('Usuário criado pelo Cypress!')
+
+        //cadastro de endereço
+
+         cy.get('.dx-tabs-wrapper > :nth-child(2)').click()
+         cy.xpath("(//input[@autocomplete='nope'])[1]").type('17011-900').type('{enter}')
+         cy.get('#devextreme260').click().wait(3500)
+         cy.get('[aria-label=Sim]').click({force:true})
+
+        //cliente criado
+    })
+})
