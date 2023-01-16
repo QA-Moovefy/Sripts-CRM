@@ -53,6 +53,6 @@ describe('Criar cliente CRM', ()=>{
          cy.get('#devextreme260').click().wait(3500)
          cy.get('[aria-label=Sim]').click({force:true})
 
-        //cliente criado
+        //cliente criado com sucesso
     })
 })
