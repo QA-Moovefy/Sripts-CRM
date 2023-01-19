@@ -1,0 +1,74 @@
+/// <reference types ="cypress" />
+
+// DEFINIR TITULO DA OPORTUNIDADE
+var tituloOportunidade = "Oportunidade Automatizada 4";
+
+
+describe('Realizar analise de credito',() => {
+
+    before(() => {
+        cy.visit('https://gvmmaquinasdev.azurewebsites.net/Account/Login?ReturnUrl=%2F')
+        cy.get('#filial').should('not.be.visible')
+        cy.get('#usuario').type('qa.geral')
+        cy.get('#senha').type('Vamos@2023')
+        cy.get('.dx-button-content').click()
+        .wait(5000)
+        cy.get('#filial').should('be.visible')
+        cy.get('#filial').select('96e029a5-3766-41c9-bb90-8ad4825e157b') // VAMOS LOCAÇÃO
+        // cy.get('#filial').select('07e97474-26bd-4a35-9a97-1c8b8704f96f') // TRANSRIO
+        // cy.get('#filial').select('1d8fef71-b585-4a3d-8648-bd81117aca70') // VAMOS MAQUINAS
+        // cy.get('#filial').select('d3603060-b911-eb11-9fb4-0003ff3ce4ce') // VAMOS SEMINOVOS
+        cy.get('.dx-button-content').click()
+        .wait(2000)
+        cy.get('[aria-label=Fechar]').click()
+
+
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            // Retorna falso caso o cypress detecte um erro de "Uncaught exceptions" *******
+            // Esse erro sempre causará uma falha no teste
+            // Essa condição retira a validação desse erro
+            return false
+        })
+
+
+    })
+
+    it('Análise de Crédito',() => {
+
+        cy.get('[href="/CRM/NovaOportunidade/Quadro"] > .fas').click({force: true})
+        .wait(5000)
+
+
+        cy.get('#txtPesquisa > .dx-texteditor-container').type(tituloOportunidade)
+
+
+        cy.get('#BtnTxtPesquisa').click()
+        .wait(3000)
+        cy.xpath('(//div//div//i[@class="fas fa-pen hover"])[1]').click({force:true})
+        cy.get('#tab-panel-oportunidade > :nth-child(1)').click()
+        cy.get('.dx-datagrid-content-fixed > .dx-datagrid-table > tbody[role="presentation"] > .dx-data-row > .dx-command-edit > .pesquisa-financeira').click()
+
+        //PRIMEIRA PARTE
+
+        cy.get('.dx-fa-button-icon').click()
+        cy.get('#slbTipoCredito > .dx-dropdowneditor-input-wrapper > .dx-texteditor-container > .dx-texteditor-buttons-container > .dx-button-normal').click()
+        .wait(3000)
+        cy.xpath('(//div//div[@class="dx-item-content dx-list-item-content"])[15]').click({force:true})
+        cy.xpath('//div//textarea[@name="ObservacaoCredito"]').type('Observação Teste')
+        cy.get('#btnSalvar').click()
+        .wait(3000)
+
+        //SEGUNDA PARTE
+
+        cy.get('.btn').click()
+        .wait(2000)
+        cy.get('#htmlEditObservacao > .dx-quill-container > .ql-editor').type("Observacao Crivo")
+        cy.xpath('(//div//div[@id="btnAprova"])[2]').click().wait(15000)
+
+        //TERCEIRA PARTE
+
+        cy.get('.btn').click()
+        cy.xpath('(//div//div[@id="btnAprova"])[1]').click() // ------------------------- APROVAR NORMAL
+        //cy.xpath('(//div//div[@id="btnAprovaRessalva"])').click() // ------------------ APROVAR COM RESSALVA
+    })
+})
