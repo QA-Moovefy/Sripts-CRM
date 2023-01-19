@@ -1,0 +1,57 @@
+/// <reference types ="cypress" />
+
+//DEFINIR TITULO DA OPORTUNIDADE
+var tituloOportunidade = "Oportunidade Automatizada 4";
+
+
+describe('Mover o card de fase',() => {
+
+    beforeEach(() => {
+        cy.visit('https://gvmmaquinasdev.azurewebsites.net/Account/Login?ReturnUrl=%2F')
+        cy.get('#filial').should('not.be.visible')
+        cy.get('#usuario').type('qa.geral')
+        cy.get('#senha').type('Vamos@2023')
+        cy.get('.dx-button-content').click()
+        .wait(5000)
+        cy.get('#filial').should('be.visible')
+        cy.get('#filial').select('96e029a5-3766-41c9-bb90-8ad4825e157b') // VAMOS LOCAÇÃO
+        // cy.get('#filial').select('07e97474-26bd-4a35-9a97-1c8b8704f96f') // TRANSRIO
+        // cy.get('#filial').select('1d8fef71-b585-4a3d-8648-bd81117aca70') // VAMOS MAQUINAS
+        // cy.get('#filial').select('d3603060-b911-eb11-9fb4-0003ff3ce4ce') // VAMOS SEMINOVOS
+        cy.get('.dx-button-content').click()
+        .wait(2000)
+        cy.get('[aria-label=Fechar]').click()
+
+
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            // Retorna falso caso o cypress detecte um erro de "Uncaught exceptions" *******
+            // Esse erro sempre causará uma falha no teste
+            // Essa condição retira a validação desse erro
+            return false
+        })
+
+
+    })
+
+    it('Mover para Precificação',() => {
+
+        cy.get('[href="/CRM/NovaOportunidade/Quadro"] > .fas').click({force: true})
+        .wait(5000)
+        cy.get('#txtPesquisa > .dx-texteditor-container').type(tituloOportunidade) // INFORMAR TITULO DA OPORTUNIDADE
+        cy.get('#BtnTxtPesquisa').click().wait(3000)
+
+        cy.xpath('(//div//div//li[@class="card-oportunidade borda-aberta"])[1]')
+        .trigger('mousedown', { which: 1, pageX: 600, pageY: 100 })                     // TRIGGER SERVE PARA CLICAR, MOVER E SOLTAR 
+        .trigger('mousemove', { which: 1, pageX: 900, pageY: 100 })
+        .trigger('mouseup')
+        
+        cy.xpath('(//div//tr[@class="dx-row dx-data-row dx-column-lines"])').click()
+        cy.xpath('(//div//div[@aria-label="Escolher Proposta"])').click()
+        cy.xpath('(//div//div[@id="botao-corpo-popup-gama-aviso-padrao-sim"])').click()
+        .wait(15000)
+
+        cy.xpath('(//div//div[@aria-label="Exibir Contrato"])').click()
+
+
+    })
+})
