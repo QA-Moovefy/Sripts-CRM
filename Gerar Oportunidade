@@ -1,0 +1,109 @@
+/// <reference types ="cypress" />
+
+import '../../support/Comandos CRM/commandsCRM'
+
+// DEFINIR TITULO DA OPORTUNIDADE
+
+var tituloOportunidade = "Oportunidade Automatizada 4";
+
+
+describe('TESTE GERAR OPORTUNIDADE AUTOMATICA NO CRM', () => {
+
+    before(() => {
+        cy.visit('https://gvmmaquinasdev.azurewebsites.net/Account/Login?ReturnUrl=%2F')
+        cy.get('#filial').should('not.be.visible')
+        cy.get('#usuario').type('qa.geral')
+        cy.get('#senha').type('Vamos@2023')
+        cy.get('.dx-button-content').click()
+        .wait(5000)
+        cy.get('#filial').should('be.visible')
+        cy.get('#filial').select('96e029a5-3766-41c9-bb90-8ad4825e157b') // VAMOS LOCAÇÃO
+        // cy.get('#filial').select('07e97474-26bd-4a35-9a97-1c8b8704f96f') // TRANSRIO
+        // cy.get('#filial').select('1d8fef71-b585-4a3d-8648-bd81117aca70') // VAMOS MAQUINAS
+        // cy.get('#filial').select('d3603060-b911-eb11-9fb4-0003ff3ce4ce') // VAMOS SEMINOVOS
+        cy.get('.dx-button-content').click()
+        .wait(2000)
+        cy.get('[aria-label=Fechar]').click()
+
+
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            // Retorna falso caso o cypress detecte um erro de "Uncaught exceptions" *******
+            // Esse erro sempre causará uma falha no teste
+            // Essa condição retira a validação desse erro
+            return false
+        })
+
+    })
+
+    it('Criar oportunidade', () => {
+        cy.get('[href="/CRM/NovaOportunidade/Quadro"] > .fas').click({force: true})
+        .wait(5000)
+        cy.get('#btn-oportunidade').click()
+        
+        
+        //OPORTUNIDADE
+        cy.get('#tab-panel-oportunidade > :nth-child(1)').click()
+        cy.get('#btnoporSearch').click()
+        cy.get('.dx-datagrid-search-panel > .dx-texteditor-container > .dx-texteditor-input-container > .dx-texteditor-input').click().type('Teste Breno').wait(2000)
+        cy.get('[aria-describedby="dx-col-18"]').click().wait(1000)
+        cy.get('#btnSelecionarCliente').click()
+
+        cy.xpath('//div//div[@id="titulo-oportunidade"]').type(tituloOportunidade) // // INFORMAR TITULO DA OPORTUNIDADE**
+
+        cy.get('#sctBoxFunis > .dx-dropdowneditor-input-wrapper > .dx-texteditor-container > .dx-texteditor-buttons-container > .dx-button-normal').click({force:true})
+        cy.xpath('(//div//div[@class="dx-item-content dx-list-item-content"])[6]').click({force:true})
+        cy.get('#sctBoxFases > .dx-dropdowneditor-input-wrapper').click()
+        cy.xpath('(//div//div[@class="dx-item-content dx-list-item-content"])[7]').click({force:true})
+        cy.get('#slbStatus > .dx-dropdowneditor-input-wrapper').click()
+        cy.xpath('(//div//div[@class="dx-item-content dx-list-item-content"])[8]').click({force:true})
+        cy.xpath('(//div//div[@id="edtRespOpor"])').type('qa.geral')
+        cy.get('#edtRespOpor > .dx-dropdowneditor-input-wrapper').click()
+        cy.xpath('(//div//div[@class="dx-item-content dx-list-item-content"])[11]').click({force:true})
+
+        //COTACAO
+        cy.get('.dx-tabs-wrapper > :nth-child(2)').click()
+        cy.get('#btnNovaCotacao').click()
+        cy.get('#lstPlanos > .dx-scrollable-wrapper > .dx-scrollable-container > .dx-scrollable-content > .dx-scrollview-content > :nth-child(1)').click()
+        cy.get('.btn').click()
+        .wait(2000)
+        cy.get('#slbTipoCota-1').click()
+        .wait(2000)
+        .type('{downArrow}').wait(2000)/*.wait(2000)*/.type('{enter}')//.should('contain','Linha Amarela').should('contain','Intralogística')
+        .click()
+        cy.get('#tbPrazLoca-1 > .dx-dropdowneditor-input-wrapper > .dx-texteditor-container > .dx-texteditor-input-container').click()
+        cy.xpath("(//div//span[@class='dx-checkbox-icon'])[20]").click({force:true})
+        cy.get('#slbReaj-1').click().wait(2000)
+        cy.xpath("(//div//div[@class='dx-item-content dx-list-item-content'])[24]").click({force:true})
+        cy.get('#slbMultDevo-1').click().wait(2000)
+        cy.xpath("(//div//div[@class='dx-item-content dx-list-item-content'])[32]").click({force:true})
+        cy.get('#slbEstado-1').click().wait(2000)
+        cy.xpath("(//div//div[@class='dx-item-content dx-list-item-content'])[35]").click({force:true})
+        cy.get('#slbRegiao-1').click().wait(2000)
+        cy.xpath("(//div//div[@class='dx-item-content dx-list-item-content'])[63]").click({force:true})
+
+
+        cy.xpath('(//div//div[@title="Adicionar veículo"])').click({force:true})
+        .wait(4000)
+        cy.xpath("(//div//div[@class='card-lista'])[1]").click({force:true})
+        cy.get('#btnAvancar').click({force:true}).wait(4000)
+        cy.xpath("(//div//div[@class='card-lista'])[12]").click()
+        cy.get('#btnAvancar').click({force:true}).wait(4000)
+        // cy.get('#tbAreaAtuacaoVeic').click()
+        // cy.xpath("(//div//div[@class='dx-item-content dx-list-item-content'])[93]").click({force:true})
+        cy.get('#slbVeiculoCondicao').click().wait(2000)
+        cy.xpath("(//div//div[@class='dx-item-content dx-list-item-content'])[99]").click({force:true})
+        cy.get('#slbTipoUnidade > .dx-collection > :nth-child(1) > .dx-radio-value-container > .dx-radiobutton-icon').click()
+        cy.get('#edtKm > .dx-texteditor-container > .dx-texteditor-buttons-container > .dx-numberbox-spin-container > .dx-numberbox-spin-up > .dx-numberbox-spin-up-icon').click()
+        cy.get('#btnAvancar').click({force:true})
+        cy.xpath('(//div//div[@class="card-lista verde"])[1]').click({force:true})//VEICULO DISPONIVEL
+        //cy.xpath("//div//div[@id='btnAvancar']").click({force:true})
+        cy.get('#btnAvancar').click({force:true})
+        cy.get('#btnAvancar').click({force:true})
+        cy.get('#btnAvancar').click({force:true})
+        cy.get('#btnAdicionar').click({force:true})
+        .wait(2000)
+
+        cy.get('#btnSalvar').click()
+
+    })
+})
