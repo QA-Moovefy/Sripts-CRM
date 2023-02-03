@@ -21,8 +21,8 @@ describe('Deve acessar e logar no CRM com dados de usuário e senha corretos', (
     it('Deve prosseguir com a criação de uma oportunidade', () => {
         cy.get(':nth-child(2) > .dropdown > .dropdown-toggle')
             .click()
+        cy.title(':: Titan :: Minhas Mídias') //TELA DE MINHAS MÍDIAS    
         cy.get('.dropdown-menu > :nth-child(5)')
-        cy.title(':: Titan :: Minhas Mídias') //TELA DE MINHAS MÍDIAS
             .click()
         cy.get('[aria-label="Nova Mídia"]')
             .click()
@@ -33,15 +33,15 @@ describe('Deve acessar e logar no CRM com dados de usuário e senha corretos', (
         cy.get('#titulo-catalogo').click()
         cy.get(':nth-child(3) > .dx-item-content > [style="font-size: 0.8em;"]').click()
         cy.get('#aquisicao-catalogo').click()
-        cy.get(':nth-child(3) > .dx-item-content > [style="display: flex;"]').click()
+        cy.xpath("//div[contains(text(),'Agro')]").click()
         cy.get('[aria-label="Criar Marketbook"]')
-            .click()
+            .click({force:true})
     })
 
     afterEach('Gerando o novo marketbook', () => {
-        cy.get('#info-usuario > .dx-widget > [aria-selected="false"] > .dx-radio-value-container > .dx-radiobutton-icon').first().click({force:true}) //EXIBE INFORMAÇÕES DO USUÁRIO
-        cy.get('#redes-sociais > .dx-widget > [aria-selected="false"] > .dx-radio-value-container > .dx-radiobutton-icon').first().click({force:true}) //EXIBE REDES SOCIAIS
-        cy.get('#localidade-veiculo > .dx-widget > [aria-selected="false"] > .dx-radio-value-container > .dx-radiobutton-icon').first().click({force:true}) //EXIBE LOCALIDADE DO VEÍCULO
+        cy.get('#info-usuario > .dx-widget > [aria-selected="false"] > .dx-radio-value-container > .dx-radiobutton-icon').click({force:true}) //EXIBE INFORMAÇÕES DO USUÁRIO
+        cy.get('#redes-sociais > .dx-widget > [aria-selected="false"] > .dx-radio-value-container > .dx-radiobutton-icon').click({force:true}) //EXIBE REDES SOCIAIS
+        cy.get('#localidade-veiculo > .dx-widget > [aria-selected="false"] > .dx-radio-value-container > .dx-radiobutton-icon').click({force:true}) //EXIBE LOCALIDADE DO VEÍCULO
         cy.get('[onclick="abrePopupBannerImagem(0)"]')
             .click()
         cy.get(':nth-child(4) > .dx-item-content > div > .img-banner-lista') //ADICIONA BANNER AO VEÍCULO
@@ -162,4 +162,3 @@ describe('Deve acessar e logar no CRM com dados de usuário e senha corretos', (
     })
     
 })
-
