@@ -1,0 +1,46 @@
+/// <reference types="cypress" />
+
+describe('Loop para criação de varios produtos interesse para povamento de grid e teste de filtro', () => {
+    beforeEach(()=>{ //Login no site CRM filial Seminovos
+        
+        cy.get('#usuario',).type('Gama')
+        cy.get('#senha').type('Gama@2022')
+        cy.get('[aria-label=ACESSAR]').click()
+        cy.get('#filial').select('SEMINOVOS - Pinheirinho')
+        cy.get('[aria-label=ACESSAR]').click().wait(1500)
+ 
+    })
+        const Produtos = [ //objeto com 10 produtos pra criaçãoe  povomento do site 
+            
+            'Produto via cypress_1',
+            'Produto via cypress_2',
+            'Produto via cypress_3',
+            'Produto via cypress_4',
+            'Produto via cypress_5',
+            'Produto via cypress_6',
+            'Produto via cypress_7',
+            'Produto via cypress_8',
+            'Produto via cypress_9',
+            'Produto via cypress_10'
+
+        ]
+
+        Produtos.forEach(Produto => { //repetição que cria 10 produtos 
+
+            it(`Deve criar ${Produto}`, () => {
+
+                cy.visit('https://gvmmaquinasdev.azurewebsites.net/Cliente/Detalhe?Id=ddbf9106-079b-4d88-ad46-57ab9e3983cc').wait(2000)
+
+                cy.xpath("//span[contains(text(), 'Incluir Produto Interesse')]")
+                    .click({force:true})
+
+                cy.get('#edtCategoriaId')
+                    .click().wait(3000).type('123Teste123').wait(2000)
+
+                cy.get('#edtObservacao').type(Produto)
+
+                cy.xpath("//span[contains(text(), 'Salvar Produto Interesse')]").click({force:true})
+
+            })            
+        })    
+})
